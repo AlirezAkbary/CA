@@ -14,6 +14,9 @@ public class Processor{
     Register OPC;
     Register H;
     ALU alu;
+    Memory memory;
+    boolean zeroFlag;
+    boolean negFlag;
     public Processor(){
         this.MAR = new Register(0);
         this.MDR = new Register(0);
@@ -26,41 +29,59 @@ public class Processor{
         this.OPC = new Register(0);
         this.H = new Register(0);
         this.alu = new ALU();
+        this.memory = new Memory();
     }
-    public void FETCH(){
+    public void FETCH()
+    {
+        //return if instruction is HLT and dont take record and enjoy your life
+        //no more microwave food
+        //
+        //fetch instruction and take records
+        //goto instruction method
+        this.FETCH();
+    }
+    public void BIPUSH()
+    {
 
     }
-    public void BIPUSH(){
+    public void GOTO()
+    {
 
     }
-    public void GOTO(){
+    public void IADD()
+    {
 
     }
-    public void IADD(){
+    public void IFEQ()
+    {
 
     }
-    public void IFEQ(){
+    public void IFLT()
+    {
 
     }
-    public void IFLT(){
+    public void IF_ICMPEQ()
+    {
 
     }
-    public void IF_ICMPEQ(){
+    public void IINC()
+    {
 
     }
-    public void IINC(){
+    public void ILOAD()
+    {
 
     }
-    public void ILOAD(){
+    public void ISTORE()
+    {
 
     }
-    public void ISTORE(){
+    public void ISUB()
+    {
 
     }
-    public void ISUB(){
-
-    }
-    public void NOP(){
+    public void NOP()
+    {
 
     }
 

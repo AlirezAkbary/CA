@@ -18,4 +18,9 @@ public class ALU{
         return new int[]{};
     }
 
+    public String getRecord()
+    {
+        return String.valueOf(signal_control);
+    }
+
 }

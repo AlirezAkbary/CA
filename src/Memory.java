@@ -13,4 +13,14 @@ public class Memory {
         this.start = false;
         this.reset = false;
     }
+
+    public void read(int address)
+    {
+
+    }
+
+    public MemRecord getRecord()
+    {
+        return new MemRecord(rwn, start, ready);
+    }
 }

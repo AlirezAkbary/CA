@@ -13,10 +13,12 @@ public class Processor{
     Register TOS;
     Register OPC;
     Register H;
+    Register IR;
     ALU alu;
     Memory memory;
     boolean zeroFlag;
     boolean negFlag;
+    Recorder recorder;
     public Processor(){
         this.MAR = new Register(0);
         this.MDR = new Register(0);
@@ -29,10 +31,69 @@ public class Processor{
         this.OPC = new Register(0);
         this.H = new Register(0);
         this.alu = new ALU();
-        this.memory = new Memory();
+        this.memory = new Memory(recorder);
+        this.IR = new Register(0);
     }
+
+    public void start()
+    {
+        recorder.takeRecord();
+        this.FETCH();
+    }
+
     public void FETCH()
     {
+        memory.start = true;
+        memory.rwn = true;
+        MBR.data = memory.read(PC.data) % 256;
+        MBR.load = true;
+        recorder.takeRecord();
+        MBR.load = false;
+        IR.load = true;
+        IR.data = MBR.data;
+        recorder.takeRecord();
+        PC.data += 1;
+        switch(IR.data)
+        {
+            case 16:
+                //bipush
+                this.BIPUSH();
+                break;
+            case 167:
+                //GOTO offset
+                break;
+            case 96:
+                //iadd
+                break;
+            case 153:
+                //ifeq
+                break;
+            case 155:
+                //iflt
+                break;
+            case 159:
+                //if_icmeq
+                break;
+            case 132:
+                //iinc
+                break;
+            case 21:
+                //iload
+                break;
+            case 54:
+                //istore
+                break;
+            case 100:
+                //isub
+                break;
+            case 0:
+                //nop
+                break;
+            case 10:
+                //end processing OMG
+        }
+
+
         //return if instruction is HLT and dont take record and enjoy your life
         //no more microwave food
         //
@@ -42,6 +103,31 @@ public class Processor{
     }
     public void BIPUSH()
     {
+        memory.start = true;
+        memory.rwn = true;
+        MBR.data = memory.read(PC.data) % 256;
+        MBR.load = true;
+        recorder.takeRecord();
+        MBR.load = false;
+        MDR.load = true;
+        TOS.load = true;
+        recorder.takeRecord();
+        MDR.load = false;
+        TOS.load = false;
+        SP.load = true;
+        MDR.data = (MBR.data << 24) >> 24;
+        TOS.data = (MBR.data << 24) >> 24;
+        alu.setFunction("010100");
+        recorder.takeRecord();
+        MAR.data = SP.data << 2;
+        PC.data = PC.data + 1;
+        alu.setFunction("010100");
+        recorder.takeRecord();
+        memory.start = true;
+        memory.rwn = false;
+        memory.write(MDR.data, MAR.data);
+        recorder.takeRecord();
+        return;
 
     }
     public void GOTO()

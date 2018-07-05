@@ -27,6 +27,7 @@ public class Recorder
                         processor.TOS.getRecord(),
                         processor.OPC.getRecord(),
                         processor.H.getRecord(),
+                        processor.IR.getRecord(),
                         memory.getRecord(),
                         processor.alu.getRecord(),
                         processor.negFlag,
@@ -48,6 +49,7 @@ class Record
     RegRecord TOS;
     RegRecord OPC;
     RegRecord H;
+    RegRecord IR;
     MemRecord memory;
     String ALU_signal;
     boolean Nflag;
@@ -65,6 +67,7 @@ class Record
             RegRecord TOS,
             RegRecord OPC,
             RegRecord h,
+            RegRecord IR,
             MemRecord memory,
             String ALU_signal,
             boolean nflag,
@@ -85,6 +88,7 @@ class Record
         this.ALU_signal = ALU_signal;
         Nflag = nflag;
         Zflag = zflag;
+        this.IR = IR;
     }
 }
 

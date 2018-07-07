@@ -19,7 +19,7 @@ public class Processor{
     boolean zeroFlag;
     boolean negFlag;
     Recorder recorder;
-    public Processor(){
+    public Processor(Recorder recorder){
         this.MAR = new Register(0);
         this.MDR = new Register(0);
         this.PC = new Register(0);
@@ -33,6 +33,9 @@ public class Processor{
         this.alu = new ALU();
         this.memory = new Memory(recorder);
         this.IR = new Register(0);
+        this.recorder = recorder;
+        this.recorder.memory = memory;
+        this.recorder.setUp(this);
     }
 
     public void start()
@@ -91,6 +94,7 @@ public class Processor{
                 break;
             case 10:
                 //end processing OMG
+                return;
         }
 
 

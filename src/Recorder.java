@@ -35,6 +35,14 @@ public class Recorder
                 )
         );
     }
+
+    public void deleteLast(int num)
+    {
+        for (int i = 0; i < num; i++)
+        {
+            records.remove(records.size() - 1);
+        }
+    }
 }
 
 class Record
@@ -89,6 +97,30 @@ class Record
         Nflag = nflag;
         Zflag = zflag;
         this.IR = IR;
+    }
+
+    public void print()
+    {
+        System.out.println("MAR = " + MAR.value);
+        System.out.println("MDR = " + MDR.value);
+        System.out.println("PC = " + PC.value);
+        System.out.println("MBR = " + MBR.value);
+        System.out.println("SP = " + SP.value);
+        System.out.println("LV = " + LV.value);
+        System.out.println("CPP = " + PC.value);
+        System.out.println("TOS = " + TOS.value);
+        System.out.println("OPC = " + OPC.value);
+        System.out.println("H = " + H.value);
+        System.out.println("ALU = " + ALU_signal);
+        System.out.println("IR = " + IR.value);
+        System.out.println("NFLAG = " + Nflag);
+        System.out.println("Zflag = " + Zflag);
+        System.out.println("Ready = " + memory.ready);
+        System.out.println("Start = " + memory.start);
+        System.out.println("rwn = " + memory.rwn);
+
+        System.out.println(".......................");
+
     }
 }
 

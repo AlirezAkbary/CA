@@ -18,6 +18,12 @@ public class Memory {
         this.recorder = recorder;
     }
 
+    {
+        array[0] = 16;
+        array[1] = -5;
+        array[2] = 10;
+    }
+
     public int read(int address)
     {
         int delay = (new Random()).nextInt(4) + 1;

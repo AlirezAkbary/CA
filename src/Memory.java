@@ -19,9 +19,17 @@ public class Memory {
     }
 
     {
+
         array[0] = 16;
-        array[1] = -5;
-        array[2] = 10;
+        array[1] = 10;
+        array[2] = 16;
+        array[3] = 10;
+        array[4] = (byte)159;
+        array[5] = 0;
+        array[6] = 43;
+        array[7] = 10;
+        array[47] = 10;
+
     }
 
     public int read(int address)
@@ -35,7 +43,11 @@ public class Memory {
             recorder.takeRecord();
         }
         ready = true;
-        return array[address] + (array[address + 1] << 8) + (array[address + 2] << 16)  + (array[address + 3] << 24);
+        int alaki = ((array[address] & 0x000000FF) + ((array[address + 1] << 8) & 0x0000FF00) + ((array[address + 2] << 16) & 0x00FF0000)  + ((array[address + 3] << 24) & 0xFF000000))%256;
+
+        System.out.println(alaki+ "Read");
+        System.out.println((array[address] & 0x000000FF)+" "+((array[address + 1] << 8) & 0x0000FF00)+" "+((array[address + 2] << 16) & 0x00FF0000)+" "+ ((array[address + 3] << 24) & 0xFF000000)+"read");
+        return (array[address] & 0x000000FF) + ((array[address + 1] << 8) & 0x0000FF00) + ((array[address + 2] << 16) & 0x00FF0000)  + ((array[address + 3] << 24) & 0xFF000000);
     }
 
 
@@ -54,6 +66,7 @@ public class Memory {
         array[address + 2] = (byte) ((value >> 16) % 256);
         array[address + 3] = (byte) ((value >> 24) % 256);
         ready = true;
+        System.out.println(address+ " " + array[address] +" "+ array[address+1] + " " + array[address+2] + " " + array[address+3] + "Write");
     }
 
 

@@ -1,5 +1,7 @@
 import javafx.util.Pair;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -12,7 +14,7 @@ public class Assembler
     {
         HashMap<String, Integer> label = new HashMap<>();
         ArrayList<Pair> constant = new ArrayList<>();
-        byte[] out = new byte[1024];
+        byte[] out = new byte[1025];
         ArrayList<String> var = new ArrayList<>();
         input = input.toLowerCase();
         String[] s = input.split("\\s+");
@@ -178,6 +180,18 @@ public class Assembler
                     memNum++;
             }
         }
+
+        out[memNum] = 10;
+
+        String str = "";
+        for (int i = 0; i < out.length; i++)
+        {
+            str += String.format("0x%02X", out[i]) + "\n";
+        }
+        BufferedWriter writer = new BufferedWriter(new FileWriter("mem.txt"));
+        writer.write(str);
+
+        writer.close();
 
         return out;
     }

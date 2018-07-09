@@ -26,7 +26,7 @@ public class Processor{
         this.MBR = new Register(0);
         this.SP = new Register(64);
         this.LV = new Register(128);
-        this.CPP = new Register(192);
+        this.CPP = new Register(511);
         this.TOS = new Register(0);
         this.OPC = new Register(0);
         this.H = new Register(0);

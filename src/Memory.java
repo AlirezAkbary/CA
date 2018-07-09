@@ -19,16 +19,39 @@ public class Memory {
     }
 
     {
-
-        array[0] = 16;
-        array[1] = 10;
-        array[2] = 16;
-        array[3] = 10;
-        array[4] = (byte)159;
+        //int x = 0;
+        //for (int i = 0;i<20;i++)
+        //  x+=i;
+        array[0] = 16;//bipush 0
+        array[1] = 0;
+        array[2] = 54;//istore x(2)
+        array[3] = 2;
+        array[4] = 16;//bipush 0
         array[5] = 0;
-        array[6] = 43;
-        array[7] = 10;
-        array[47] = 10;
+        array[6] = 54;//istore i(3)
+        array[7] = 3;
+        array[8] = 16;//bipush 19, label
+        array[9] = 19;
+        array[10] = 21;//iload i(3)
+        array[11] = 3;
+        array[12] = 100;//isub
+        array[13] = (byte) 155;//iflt
+        array[14] = 0;
+        array[15] = 17;//later should complete
+        array[16] = 21;//iload x
+        array[17] = 2;
+        array[18] = 21;
+        array[19] = 3;//iload i
+        array[20] = 96;//IADD
+        array[21] = 54;//ISTORE x(2)
+        array[22] = 2;
+        array[23] = (byte)132;//iinc i(3) 1
+        array[24] = 3;
+        array[25] = 1;
+        array[26] = (byte)167;
+        array[27] = -1;
+        array[28] = -18;
+        array[30] = 10;
 
     }
 

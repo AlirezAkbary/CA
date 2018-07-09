@@ -183,7 +183,7 @@ public class Processor{
         MBR.load = false;
         H.load = true;
         recorder.takeRecord();
-        H.data = alu.operation(0, MBR.data&0x0000FF00, "B") << 8;
+        H.data = (alu.operation(0, (MBR.data<<8)&0x0000FF00, "B") << 16)>>16;
         H.load = false;
         PC.load = true;
         recorder.takeRecord();
@@ -470,7 +470,7 @@ public class Processor{
         memory.start = true;
         memory.rwn = false;
         recorder.takeRecord();
-        System.out.println(alu.operation(0, ((MDR.data<<24)>>24), "B") + "why" + MDR.data);
+        //System.out.println(alu.operation(0, ((MDR.data<<24)>>24), "B") + "why" + MDR.data);
         TOS.data = alu.operation(0, (MDR.data), "B");
         TOS.load = false;
         memory.write(MDR.data, MAR.data);

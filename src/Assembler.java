@@ -10,6 +10,7 @@ import java.util.HashMap;
  */
 public class Assembler
 {
+    int instNum;
     public byte[] start(String input) throws Exception
     {
         HashMap<String, Integer> label = new HashMap<>();
@@ -114,6 +115,7 @@ public class Assembler
                     out[memNum] = (byte) 0x10;
                     out[memNum + 1] = (byte) Integer.parseInt(s[i + 1]);
                     memNum += 2;
+                    instNum++;
                     i++;
                     break;
                 case "ifeq":
@@ -123,6 +125,7 @@ public class Assembler
                     out[memNum + 2] = (byte) ((dest - memNum) % 256);
                     memNum += 3;
                     i++;
+                    instNum++;
                     break;
                 case "iflt":
                     out[memNum] = (byte) 0x9B;
@@ -131,6 +134,7 @@ public class Assembler
                     out[memNum + 2] = (byte) ((dest - memNum) % 256);
                     memNum += 3;
                     i++;
+                    instNum++;
                     break;
                 case "if_icmpeq":
                     out[memNum] = (byte) 0x9F;
@@ -139,6 +143,7 @@ public class Assembler
                     out[memNum + 2] = (byte) ((dest - memNum) % 256);
                     memNum += 3;
                     i++;
+                    instNum++;
                     break;
                 case "goto":
                     out[memNum] = (byte) 0xA7;
@@ -147,6 +152,7 @@ public class Assembler
                     out[memNum + 2] = (byte) ((dest - memNum) % 256);
                     memNum += 3;
                     i++;
+                    instNum++;
                     break;
                 case "iinc":
                     out[memNum] = (byte) 0x84;
@@ -154,30 +160,36 @@ public class Assembler
                     out[memNum + 2] = (byte) (Integer.parseInt(s[i + 2]));
                     memNum += 3;
                     i+= 2;
+                    instNum++;
                     break;
                 case "iload":
                     out[memNum] = 0x15;
                     out[memNum + 1] = (byte)(var.indexOf(s[i + 1]) * 4);
                     memNum += 2;
                     i++;
+                    instNum++;
                     break;
                 case "istore":
                     out[memNum] = 0x36;
                     out[memNum + 1] = (byte)(var.indexOf(s[i + 1]) * 4);
                     memNum += 2;
                     i++;
+                    instNum++;
                     break;
                 case "isub":
                     out[memNum] = 0x64;
                     memNum++;
+                    instNum++;
                     break;
                 case "iadd":
                     out[memNum] = 0x60;
                     memNum++;
+                    instNum++;
                     break;
                 case "nop":
                     out[memNum] = 0x00;
                     memNum++;
+                    instNum++;
             }
         }
 
@@ -186,7 +198,8 @@ public class Assembler
         String str = "";
         for (int i = 0; i < out.length; i++)
         {
-            str += String.format("0x%02X", out[i]) + "\n";
+            //str += String.format("0x%02X", out[i]) + "\n";
+            str += out[i] + "\n";
         }
         BufferedWriter writer = new BufferedWriter(new FileWriter("mem.txt"));
         writer.write(str);

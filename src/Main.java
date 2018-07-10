@@ -1,5 +1,6 @@
 import javafx.application.Application;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -37,7 +38,15 @@ public class Main extends Application
     Label ALU = new Label("ALU signal: 000000");
     Label nFlag = new Label("Neg Flag: 0");
     Label zFlag = new Label("Z Flag:");
+    Label nff = new Label("Neg Flip Flop: 0");
+    Label zff = new Label("Zero Flip Flop: 0");
     TextArea codeSubmit = new TextArea("Write your code here!");
+    Label throughput = new Label("Throughput: 0 inst/clk");
+    Assembler assembler = new Assembler();
+    Label util = new Label("Utilization: 0");
+    int[] instNum = new int[1];
+    Label hitRate = new Label("Hits: 0");
+    Label missRate = new Label("Misses: 0");
 
 
     {
@@ -116,14 +125,14 @@ public class Main extends Application
 
 
         scrollGroup.getChildren().addAll(intro, MAR, MDR, PC, MBR, SP, LV, CPP,
-                TOS, OPC, H, IR, start, rwn, ready, ALU, nFlag, zFlag);
+                TOS, OPC, H, IR, start, rwn, ready, ALU, nFlag, zFlag, zff, nff);
 
         scrollGroup.setSpacing(20);
         scrollGroup.setAlignment(Pos.BASELINE_CENTER);
 
         ScrollPane scrollPane = new ScrollPane(scrollGroup);
 
-        scrollGroup.setPrefSize(200, 300);
+        scrollGroup.setPrefSize(250, 300);
 
         BorderPane bp = new BorderPane();
         bp.setRight(scrollPane);
@@ -134,10 +143,23 @@ public class Main extends Application
         Button last = new Button("Last");
         Button prev = new Button("Prev");
         Button reset = new Button("reset");
+        ToggleButton cache = new ToggleButton("Cache Off");
+
+        cache.setOnAction(event -> {
+            if (processor.memory.hasCache)
+            {
+                processor.memory.hasCache = false;
+                cache.setText("Cache Off");
+            } else {
+                processor.memory.hasCache = true;
+                cache.setText("Cache On");
+            }
+        });
+
 
         HBox hBox = new HBox();
-        hBox.getChildren().addAll(newFile, next, prev, last, reset);
-        hBox.setSpacing(40);
+        hBox.getChildren().addAll(newFile, next, prev, last, reset, cache);
+        hBox.setSpacing(30);
         hBox.setPrefSize(500, 60);
         hBox.setAlignment(Pos.CENTER);
 
@@ -159,10 +181,25 @@ public class Main extends Application
 
 
         Label alert = new Label();
-        alert.setPrefSize(500, 100);
-        alert.setAlignment(Pos.BASELINE_CENTER);
-        bp.setBottom(alert);
+        Group bottomBox = new Group();
+        bottomBox.getChildren().addAll(alert, throughput, util, missRate, hitRate);
+        alert.setPrefSize(400, 100);
+        alert.setLayoutX(0);
+        alert.setLayoutY(0);
 
+        throughput.setLayoutX(350);
+        throughput.setLayoutY(10);
+
+        util.setLayoutX(350);
+        util.setLayoutY(50);
+
+        hitRate.setLayoutX(350);
+        hitRate.setLayoutY(90);
+
+        missRate.setLayoutX(350);
+        missRate.setLayoutY(130);
+
+        bp.setBottom(bottomBox);
 
 
 
@@ -196,13 +233,19 @@ public class Main extends Application
             {
                 alert.setText("Invalid Code Input\n");
 
-                System.out.println(codeSubmit.getText());
-
+                e.printStackTrace();
                 return;
             }
 
             setLabels(recorder.records.get(0));
             num[0] = 0;
+            System.out.println(instNum[0]);
+            throughput.setText(String.format("Throughput: %.3f inst/clk", (double)instNum[0] / recorder.records.size()));
+            System.out.println(instNum[0]);
+            util.setText(String.format("Utilization: %.3f" , (double)(recorder.records.size() - processor.memory.haltclk) / recorder.records.size()));
+            System.out.println(recorder.records.size());
+            hitRate.setText(String.format("Hits: %d", processor.memory.hitNum));
+            missRate.setText(String.format("Misses: %d", processor.memory.missNum));
         });
 
         last.setOnAction(event -> {
@@ -227,7 +270,7 @@ public class Main extends Application
         reset.setOnAction(event -> this.reSet());
 
 
-        Scene scene = new Scene(bp, 500, 500);
+        Scene scene = new Scene(bp, 600, 600);
 
         primaryStage.setScene(scene);
 
@@ -238,8 +281,9 @@ public class Main extends Application
 
     private void runCode(String input) throws Exception
     {
-        processor.memory.array = (new Assembler()).start(input);
+        processor.memory.array = assembler.start(input);
         processor.start();
+        this.instNum[0] = assembler.instNum;
 
     }
 
@@ -280,6 +324,10 @@ public class Main extends Application
 
         String startString = "Start: " + record.memory.start;
 
+        String nffString = "Neg Flip Flop: " + record.Negative.set;
+
+        String zffString = "Zero Flip Flop:" + record.Zero.set;
+
         String rwnString = "rwn: " + record.memory.rwn;
         String readyString = "Ready: " + record.memory.ready;
         String aluString = "ALU Signal: " + record.ALU.Function;
@@ -304,6 +352,9 @@ public class Main extends Application
         ALU.setText(aluString);
         nFlag.setText(nFlagString);
         zFlag.setText(zFlagString);
+
+        nff.setText(nffString);
+        zff.setText(zffString);
     }
 
     private void reSet()
@@ -311,6 +362,7 @@ public class Main extends Application
         recorder = new Recorder();
         processor = new Processor(recorder);
         recorder.setUp(processor);
+        assembler = new Assembler();
 
         MAR.setText("MAR: 0x00000000  0  0");
         MDR.setText("MDR: 0x00000000  0  0");
@@ -330,8 +382,17 @@ public class Main extends Application
         ALU.setText("ALU Signal: 000000");
         nFlag.setText("Neg Flag: 0");
         zFlag.setText("Zero  Flag:");
+        nff.setText("Neg Flip Flop: 0");
+        zff.setText("Zero Flip Flop: 0");
 
         codeSubmit.setText("Write your code here!");
+
+        throughput.setText("Throughput: 0 inst/clk");
+        util.setText("Utilization: 0");
+        instNum[0] = 0;
+
+        missRate.setText("Misses: 0");
+        hitRate.setText("Hits: 0");
 
     }
 

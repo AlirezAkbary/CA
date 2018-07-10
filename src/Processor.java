@@ -472,6 +472,7 @@ public class Processor{
         recorder.takeRecord();
         //System.out.println(alu.operation(0, ((MDR.data<<24)>>24), "B") + "why" + MDR.data);
         TOS.data = alu.operation(0, (MDR.data), "B");
+        System.out.println("TOS"+ TOS.data);
         TOS.load = false;
         memory.write(MDR.data, MAR.data);
         recorder.takeRecord();
